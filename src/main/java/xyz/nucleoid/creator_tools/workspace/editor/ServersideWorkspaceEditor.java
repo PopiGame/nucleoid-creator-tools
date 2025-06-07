@@ -14,6 +14,7 @@ import net.minecraft.text.Text;
 import net.minecraft.util.Formatting;
 import org.jetbrains.annotations.Nullable;
 import com.google.common.base.Predicates;
+import xyz.nucleoid.creator_tools.CreatorTools;
 import xyz.nucleoid.creator_tools.workspace.MapWorkspace;
 import xyz.nucleoid.creator_tools.workspace.WorkspaceRegion;
 import xyz.nucleoid.creator_tools.workspace.trace.PartialRegion;
@@ -172,25 +173,23 @@ public final class ServersideWorkspaceEditor implements WorkspaceEditor {
     private void renderWorkspaceBounds() {
         var workspace = this.workspace;
         var bounds = workspace.getBounds();
-        ParticleOutlineRenderer.render(this.player, bounds.min(), bounds.max(), 1.0F, 0.0F, 0.0F);
+        ParticleOutlineRenderer.render(CreatorTools.identifier("workspace_bounds"),this.player, bounds.min(), bounds.max(), 1.0F, 0.0F, 0.0F);
 
         for (var region : workspace.getRegions()) {
             if (!this.isRegionVisible(region)) continue;
-
             var regionBounds = region.bounds();
             var min = regionBounds.min();
             var max = regionBounds.max();
             double distance = this.distanceSquaredToRegion(region);
             var marker = this.regionToMarker.get(region.runtimeId());
             marker.update(region, false, distance);
-
             if (distance < 32 * 32) {
                 int color = colorForRegionBorder(region.marker());
                 float red = (color >> 16 & 0xFF) / 255.0F;
                 float green = (color >> 8 & 0xFF) / 255.0F;
                 float blue = (color & 0xFF) / 255.0F;
 
-                ParticleOutlineRenderer.render(this.player, min, max, red, green, blue);
+                ParticleOutlineRenderer.render(CreatorTools.identifier("region_"+region.runtimeId()),this.player, min, max, red, green, blue);
             }
         }
     }
@@ -210,9 +209,9 @@ public final class ServersideWorkspaceEditor implements WorkspaceEditor {
         var tracing = this.tracing;
         var traced = this.traced;
         if (tracing != null) {
-            ParticleOutlineRenderer.render(this.player, tracing.getMin(), tracing.getMax(), 0.0F, 0.8F, 0.0F);
+            ParticleOutlineRenderer.render(CreatorTools.identifier("tracing"),this.player, tracing.getMin(), tracing.getMax(), 0.0F, 0.8F, 0.0F);
         } else if (traced != null) {
-            ParticleOutlineRenderer.render(this.player, traced.min(), traced.max(), 0.1F, 1.0F, 0.1F);
+            ParticleOutlineRenderer.render(CreatorTools.identifier("tracing"), this.player, traced.min(), traced.max(), 0.1F, 1.0F, 0.1F);
         }
     }
 

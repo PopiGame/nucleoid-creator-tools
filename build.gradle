@@ -28,7 +28,7 @@ dependencies {
   modImplementation "net.fabricmc:fabric-loader:${project.loader_version}"
 
   modImplementation "net.fabricmc.fabric-api:fabric-api:${project.fabric_version}"
-
+  modImplementation(fileTree("libs"))
   modImplementation include('eu.pb4:polymer-core:0.11.0+1.21.4-rc1')
   modImplementation include('eu.pb4:polymer-virtual-entity:0.11.0+1.21.4-rc1')
   modImplementation include('xyz.nucleoid:server-translations-api:2.4.0+1.21.2-rc1')

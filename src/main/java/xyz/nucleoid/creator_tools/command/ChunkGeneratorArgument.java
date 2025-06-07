@@ -21,12 +21,10 @@ public final class ChunkGeneratorArgument {
 
     public static RequiredArgumentBuilder<ServerCommandSource, Identifier> argument(String name) {
         return CommandManager.argument(name, IdentifierArgumentType.identifier())
-                .suggests((context, builder) -> {
-                    return CommandSource.suggestIdentifiers(
-                            Registries.CHUNK_GENERATOR.getIds().stream(),
-                            builder
-                    );
-                });
+                .suggests((context, builder) -> CommandSource.suggestIdentifiers(
+                        Registries.CHUNK_GENERATOR.getIds().stream(),
+                        builder
+                ));
     }
 
     public static MapCodec<? extends ChunkGenerator> get(CommandContext<ServerCommandSource> context, String name) throws CommandSyntaxException {
