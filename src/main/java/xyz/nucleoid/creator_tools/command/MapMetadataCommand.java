@@ -432,7 +432,7 @@ public final class MapMetadataCommand {
                 .toList();
 
         for (var region : regions) {
-            NetworkingUtil.sendPacketS2C(Objects.requireNonNull(context.getSource().getPlayer()), new MapToolOutlineRemovePacketS2C(CreatorTools.identifier("region_"+region.runtimeId())));
+            NetworkingUtil.sendPacketS2C(source.getPlayerOrThrow(), new MapToolOutlineRemovePacketS2C(CreatorTools.identifier("region_"+region.runtimeId())));
             map.removeRegion(region);
         }
 
