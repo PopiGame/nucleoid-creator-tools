@@ -10,6 +10,8 @@ import com.mojang.brigadier.exceptions.DynamicCommandExceptionType;
 import com.mojang.brigadier.exceptions.SimpleCommandExceptionType;
 import com.mojang.brigadier.suggestion.SuggestionProvider;
 import com.mojang.datafixers.util.Either;
+import dev.popigame.mod.networking.packets.s2c.maptool.MapToolOutlineRemovePacketS2C;
+import dev.popigame.mod.util.NetworkingUtil;
 import me.lucko.fabric.api.permissions.v0.Permissions;
 import net.minecraft.command.CommandSource;
 import net.minecraft.command.argument.BlockPosArgumentType;
@@ -33,6 +35,7 @@ import net.minecraft.util.Pair;
 import net.minecraft.util.math.BlockPos;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import xyz.nucleoid.creator_tools.CreatorTools;
 import xyz.nucleoid.creator_tools.workspace.MapWorkspace;
 import xyz.nucleoid.creator_tools.workspace.MapWorkspaceManager;
 import xyz.nucleoid.creator_tools.workspace.WorkspaceRegion;
@@ -40,6 +43,7 @@ import xyz.nucleoid.map_templates.BlockBounds;
 
 import java.util.Arrays;
 import java.util.Collection;
+import java.util.Objects;
 import java.util.function.Predicate;
 import java.util.stream.Stream;
 
@@ -428,6 +432,7 @@ public final class MapMetadataCommand {
                 .toList();
 
         for (var region : regions) {
+            NetworkingUtil.sendPacketS2C(Objects.requireNonNull(context.getSource().getPlayer()), new MapToolOutlineRemovePacketS2C(CreatorTools.identifier("region_"+region.runtimeId())));
             map.removeRegion(region);
         }
 
