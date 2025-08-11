@@ -5,6 +5,8 @@ import java.util.Objects;
 import java.util.function.Consumer;
 import java.util.function.Predicate;
 
+import dev.popigame.mod.networking.packets.s2c.maptool.MapToolOutlineToggleVisible;
+import dev.popigame.mod.util.PopiGameNetworkUtil;
 import org.jetbrains.annotations.Nullable;
 
 import eu.pb4.polymer.core.api.item.PolymerItem;
@@ -39,13 +41,11 @@ public final class RegionVisibilityFilterItem extends Item {
             return super.use(world, player, hand);
         }
 
-        var stack = player.getStackInHand(hand);
-
         if (player instanceof ServerPlayerEntity serverPlayer) {
             var workspaceManager = MapWorkspaceManager.get(Objects.requireNonNull(serverPlayer.getServer()));
             var editor = workspaceManager.getEditorFor(serverPlayer);
             if (editor != null) {
-
+                PopiGameNetworkUtil.sendPacketS2C(serverPlayer, new MapToolOutlineToggleVisible());
                 return ActionResult.SUCCESS;
             }
         }
