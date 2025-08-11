@@ -3,32 +3,23 @@ package xyz.nucleoid.creator_tools.item;
 import java.util.List;
 import java.util.Objects;
 import java.util.function.Consumer;
-import java.util.function.Predicate;
 
 import dev.popigame.mod.networking.packets.s2c.maptool.MapToolOutlineToggleVisible;
 import dev.popigame.mod.util.PopiGameNetworkUtil;
 import org.jetbrains.annotations.Nullable;
-
-import eu.pb4.polymer.core.api.item.PolymerItem;
-import net.minecraft.component.DataComponentTypes;
-import net.minecraft.component.type.DyedColorComponent;
 import net.minecraft.component.type.TooltipDisplayComponent;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
-import net.minecraft.item.Items;
 import net.minecraft.item.tooltip.TooltipType;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.text.Text;
 import net.minecraft.util.ActionResult;
 import net.minecraft.util.Formatting;
 import net.minecraft.util.Hand;
-import net.minecraft.util.Identifier;
 import net.minecraft.world.World;
 import xyz.nucleoid.creator_tools.component.CreatorToolsDataComponentTypes;
 import xyz.nucleoid.creator_tools.workspace.MapWorkspaceManager;
-import xyz.nucleoid.creator_tools.workspace.editor.ServersideWorkspaceEditor;
-import xyz.nucleoid.packettweaker.PacketContext;
 
 public final class RegionVisibilityFilterItem extends Item {
     public RegionVisibilityFilterItem(Settings settings) {

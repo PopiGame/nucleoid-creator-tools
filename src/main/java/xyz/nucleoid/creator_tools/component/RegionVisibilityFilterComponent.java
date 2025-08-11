@@ -9,11 +9,9 @@ import net.minecraft.network.codec.PacketCodecs;
 import java.util.List;
 
 public record RegionVisibilityFilterComponent(List<String> regions) {
-    public static final Codec<RegionVisibilityFilterComponent> CODEC = RecordCodecBuilder.create(instance -> {
-        return instance.group(
-                Codec.STRING.listOf().fieldOf("regions").forGetter(RegionVisibilityFilterComponent::regions)
-        ).apply(instance, RegionVisibilityFilterComponent::new);
-    });
+    public static final Codec<RegionVisibilityFilterComponent> CODEC = RecordCodecBuilder.create(instance -> instance.group(
+            Codec.STRING.listOf().fieldOf("regions").forGetter(RegionVisibilityFilterComponent::regions)
+    ).apply(instance, RegionVisibilityFilterComponent::new));
 
     public static final PacketCodec<ByteBuf, RegionVisibilityFilterComponent> PACKET_CODEC = PacketCodecs.STRING
             .collect(PacketCodecs.toList())
