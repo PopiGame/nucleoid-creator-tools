@@ -163,7 +163,7 @@ public final class ServersideWorkspaceEditor implements WorkspaceEditor {
 
         ElementHolder holder = new ElementHolder();
         holder.addElement(element);
-        var attachment = SinglePlayerChunkAttachment.of(holder, this.player.getServerWorld(), region.bounds().center(), this.player);
+        var attachment = SinglePlayerChunkAttachment.of(holder, this.player.getWorld(), region.bounds().center(), this.player);
 
         var marker = new Marker(element, attachment);
         marker.update(region, true, this.distanceSquaredToRegion(region));
@@ -177,12 +177,14 @@ public final class ServersideWorkspaceEditor implements WorkspaceEditor {
 
         for (var region : workspace.getRegions()) {
             if (!this.isRegionVisible(region)) continue;
+
             var regionBounds = region.bounds();
             var min = regionBounds.min();
             var max = regionBounds.max();
             double distance = this.distanceSquaredToRegion(region);
             var marker = this.regionToMarker.get(region.runtimeId());
             marker.update(region, false, distance);
+
             if (distance < 32 * 32) {
                 int color = colorForRegionBorder(region.marker());
                 float red = (color >> 16 & 0xFF) / 255.0F;

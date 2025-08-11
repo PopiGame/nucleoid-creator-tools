@@ -4,13 +4,12 @@ import com.mojang.authlib.GameProfile;
 import it.unimi.dsi.fastutil.objects.Reference2ObjectOpenHashMap;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.nbt.NbtCompound;
-import net.minecraft.nbt.NbtElement;
 import net.minecraft.registry.RegistryKey;
-import net.minecraft.registry.RegistryKeys;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.server.world.ServerWorld;
-import net.minecraft.util.Identifier;
+import net.minecraft.storage.ReadView;
+import net.minecraft.storage.WriteView;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.TeleportTarget;
 import net.minecraft.world.World;
@@ -41,52 +40,27 @@ public abstract class ServerPlayerEntityMixin extends PlayerEntity implements Wo
 
     private int creatorToolsProtocolVersion = WorkspaceNetworking.NO_PROTOCOL_VERSION;
 
-    private ServerPlayerEntityMixin(World world, BlockPos blockPos, float yaw, GameProfile gameProfile) {
-        super(world, blockPos, yaw, gameProfile);
+    private ServerPlayerEntityMixin(World world, GameProfile gameProfile) {
+        super(world, gameProfile);
     }
 
-    @Inject(method = "writeCustomDataToNbt", at = @At("RETURN"))
-    private void writeData(NbtCompound root, CallbackInfo ci) {
-        var creatorTools = new NbtCompound();
+    @Inject(method = "writeCustomData", at = @At("RETURN"))
+    private void writeData(WriteView view, CallbackInfo ci) {
+        var creatorTools = view.get(CreatorTools.ID);
 
-        var workspaceReturns = new NbtCompound();
-
-        for (var entry : this.workspaceReturns.entrySet()) {
-            var key = entry.getKey().getValue();
-            var position = entry.getValue();
-            workspaceReturns.put(key.toString(), position.write(new NbtCompound()));
-        }
-
-        creatorTools.put("workspace_return", workspaceReturns);
-
-        if (this.leaveReturn != null) {
-            creatorTools.put("leave_return", this.leaveReturn.write(new NbtCompound()));
-        }
-
-        root.put(CreatorTools.ID, creatorTools);
+        creatorTools.put("workspace_return", ReturnPosition.MAP_CODEC, this.workspaceReturns);
+        creatorTools.putNullable("leave_return", ReturnPosition.CODEC, this.leaveReturn);
     }
 
-    @Inject(method = "readCustomDataFromNbt", at = @At("RETURN"))
-    private void readData(NbtCompound root, CallbackInfo ci) {
-        var creatorTools = root.getCompound(CreatorTools.ID);
+    @Inject(method = "readCustomData", at = @At("RETURN"))
+    private void readData(ReadView view, CallbackInfo ci) {
+        var creatorTools = view.getReadView(CreatorTools.ID);
 
         this.workspaceReturns.clear();
-        this.leaveReturn = null;
 
-        var workspaceReturnPositions = creatorTools.getCompound("workspace_return");
-        for (var key : workspaceReturnPositions.getKeys()) {
-            var id = Identifier.tryParse(key);
+        creatorTools.read("workspace_return", ReturnPosition.MAP_CODEC).ifPresent(this.workspaceReturns::putAll);
 
-            if (id != null) {
-                var dimensionKey = RegistryKey.of(RegistryKeys.WORLD, id);
-                var position = ReturnPosition.read(workspaceReturnPositions.getCompound(key));
-                this.workspaceReturns.put(dimensionKey, position);
-            }
-        }
-
-        if (creatorTools.contains("leave_return", NbtElement.COMPOUND_TYPE)) {
-            this.leaveReturn = ReturnPosition.read(creatorTools.getCompound("leave_return"));
-        }
+        this.leaveReturn = creatorTools.read("leave_return", ReturnPosition.CODEC).orElse(null);
     }
 
     @Inject(method = "copyFrom", at = @At("RETURN"))

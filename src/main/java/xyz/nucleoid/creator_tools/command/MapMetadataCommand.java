@@ -43,7 +43,6 @@ import xyz.nucleoid.map_templates.BlockBounds;
 
 import java.util.Arrays;
 import java.util.Collection;
-import java.util.Objects;
 import java.util.function.Predicate;
 import java.util.stream.Stream;
 
@@ -432,8 +431,8 @@ public final class MapMetadataCommand {
                 .toList();
 
         for (var region : regions) {
-            PopiGameNetworkUtil.sendPacketS2C(source.getPlayerOrThrow(), new MapToolOutlineRemovePacketS2C(CreatorTools.identifier("region_"+region.runtimeId())));
             map.removeRegion(region);
+            PopiGameNetworkUtil.sendPacketS2C(source.getPlayerOrThrow(), new MapToolOutlineRemovePacketS2C(CreatorTools.identifier("region_"+region.runtimeId())));
         }
 
         source.sendFeedback(() -> withMapPrefix(map, Text.translatable("text.nucleoid_creator_tools.map.region.remove.success", regions.size())), false);
@@ -477,7 +476,7 @@ public final class MapMetadataCommand {
         var map = getWorkspaceForSource(source);
 
         long result = EntityArgumentType.getEntities(context, "entities").stream()
-                .filter(entity -> entity.getEntityWorld().equals(world) && !(entity instanceof PlayerEntity)
+                .filter(entity -> entity.getWorld() == world && !(entity instanceof PlayerEntity)
                         && map.getBounds().contains(entity.getBlockPos()))
                 .filter(entity -> map.addEntity(entity.getUuid()))
                 .count();
@@ -499,7 +498,7 @@ public final class MapMetadataCommand {
         var map = getWorkspaceForSource(source);
 
         long result = EntityArgumentType.getEntities(context, "entities").stream()
-                .filter(entity -> entity.getEntityWorld().equals(world) && !(entity instanceof PlayerEntity))
+                .filter(entity -> entity.getWorld() == world && !(entity instanceof PlayerEntity))
                 .filter(entity -> map.removeEntity(entity.getUuid()))
                 .count();
 

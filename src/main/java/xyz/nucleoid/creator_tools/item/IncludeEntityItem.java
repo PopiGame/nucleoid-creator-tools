@@ -1,21 +1,19 @@
 package xyz.nucleoid.creator_tools.item;
 
-import eu.pb4.polymer.core.api.item.PolymerItem;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.ItemUsageContext;
-import net.minecraft.item.Items;
 import net.minecraft.text.Text;
 import net.minecraft.util.ActionResult;
 import net.minecraft.util.Formatting;
 import net.minecraft.util.Hand;
-import net.minecraft.util.Identifier;
 import xyz.nucleoid.creator_tools.workspace.MapWorkspaceManager;
-import xyz.nucleoid.packettweaker.PacketContext;
 
-public final class IncludeEntityItem extends Item implements PolymerItem {
+import java.util.Objects;
+
+public final class IncludeEntityItem extends Item {
     public IncludeEntityItem(Settings settings) {
         super(settings);
     }
@@ -27,9 +25,9 @@ public final class IncludeEntityItem extends Item implements PolymerItem {
 
     @Override
     public ActionResult useOnEntity(ItemStack stack, PlayerEntity user, LivingEntity entity, Hand hand) {
-        var world = user.getEntityWorld();
+        var world = user.getWorld();
         if (!world.isClient()) {
-            var workspaceManager = MapWorkspaceManager.get(world.getServer());
+            var workspaceManager = MapWorkspaceManager.get(Objects.requireNonNull(world.getServer()));
 
             var workspace = workspaceManager.byDimension(world.getRegistryKey());
             if (workspace != null) {
@@ -61,15 +59,5 @@ public final class IncludeEntityItem extends Item implements PolymerItem {
         }
 
         return ActionResult.FAIL;
-    }
-
-    @Override
-    public Item getPolymerItem(ItemStack itemStack, PacketContext context) {
-        return Items.DEBUG_STICK;
-    }
-
-    @Override
-    public Identifier getPolymerItemModel(ItemStack stack, PacketContext context) {
-        return null;
     }
 }

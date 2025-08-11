@@ -16,7 +16,7 @@ import java.util.function.Function;
 public final class CreatorToolsItems {
     public static final Item ADD_REGION = register("add_region", AddRegionItem::new);
     public static final Item INCLUDE_ENTITY = register("include_entity", IncludeEntityItem::new);
-    public static final Item REGION_VISIBILITY_FILTER = register("region_visibility_filter", RegionVisibilityFilterItem::new);
+    public static final Item REGION_VISIBILITY = register("region_visibility", RegionVisibilityFilterItem::new);
 
     public static final ItemGroup ITEM_GROUP = FabricItemGroup.builder()
         .displayName(Text.translatable("text.nucleoid_creator_tools.name"))
@@ -24,7 +24,7 @@ public final class CreatorToolsItems {
         .entries((context, entries) -> {
             entries.add(ADD_REGION);
             entries.add(INCLUDE_ENTITY);
-            entries.add(REGION_VISIBILITY_FILTER);
+            entries.add(REGION_VISIBILITY);
         })
         .build();
 
