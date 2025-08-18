@@ -6,8 +6,7 @@ import com.mojang.brigadier.context.CommandContext;
 import com.mojang.brigadier.exceptions.CommandSyntaxException;
 import com.mojang.brigadier.exceptions.DynamicCommandExceptionType;
 import com.mojang.brigadier.exceptions.SimpleCommandExceptionType;
-import dev.popigame.mod.networking.packets.s2c.maptool.MapToolOutlineClearPacketS2C;
-import dev.popigame.mod.util.PopiGameNetworkUtil;
+import dev.popigame.mod.api.CreatorToolApi;
 import me.lucko.fabric.api.permissions.v0.Permissions;
 import net.minecraft.command.argument.BlockPosArgumentType;
 import net.minecraft.command.argument.IdentifierArgumentType;
@@ -283,7 +282,7 @@ public final class MapManageCommand {
             ReturnPosition.ofSpawn(overworld).applyTo(player);
         }
 
-        PopiGameNetworkUtil.sendPacketS2C(player, new MapToolOutlineClearPacketS2C());
+        CreatorToolApi.clear(player);
 
         source.sendFeedback(
                 () -> Text.translatable("text.nucleoid_creator_tools.map.leave.success", Text.of(workspace.getIdentifier())),

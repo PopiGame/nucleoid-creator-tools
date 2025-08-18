@@ -4,8 +4,7 @@ import java.util.List;
 import java.util.Objects;
 import java.util.function.Consumer;
 
-import dev.popigame.mod.networking.packets.s2c.maptool.MapToolOutlineToggleVisible;
-import dev.popigame.mod.util.PopiGameNetworkUtil;
+import dev.popigame.mod.api.CreatorToolApi;
 import org.jetbrains.annotations.Nullable;
 import net.minecraft.component.type.TooltipDisplayComponent;
 import net.minecraft.entity.player.PlayerEntity;
@@ -36,7 +35,7 @@ public final class RegionVisibilityFilterItem extends Item {
             var workspaceManager = MapWorkspaceManager.get(Objects.requireNonNull(serverPlayer.getServer()));
             var editor = workspaceManager.getEditorFor(serverPlayer);
             if (editor != null) {
-                PopiGameNetworkUtil.sendPacketS2C(serverPlayer, new MapToolOutlineToggleVisible());
+                CreatorToolApi.visibleToggle(serverPlayer);
                 return ActionResult.SUCCESS;
             }
         }

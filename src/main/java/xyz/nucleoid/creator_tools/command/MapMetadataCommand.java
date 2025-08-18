@@ -10,8 +10,7 @@ import com.mojang.brigadier.exceptions.DynamicCommandExceptionType;
 import com.mojang.brigadier.exceptions.SimpleCommandExceptionType;
 import com.mojang.brigadier.suggestion.SuggestionProvider;
 import com.mojang.datafixers.util.Either;
-import dev.popigame.mod.networking.packets.s2c.maptool.MapToolOutlineRemovePacketS2C;
-import dev.popigame.mod.util.PopiGameNetworkUtil;
+import dev.popigame.mod.api.CreatorToolApi;
 import me.lucko.fabric.api.permissions.v0.Permissions;
 import net.minecraft.command.CommandSource;
 import net.minecraft.command.argument.BlockPosArgumentType;
@@ -432,7 +431,7 @@ public final class MapMetadataCommand {
 
         for (var region : regions) {
             map.removeRegion(region);
-            PopiGameNetworkUtil.sendPacketS2C(source.getPlayerOrThrow(), new MapToolOutlineRemovePacketS2C(CreatorTools.identifier("region_"+region.runtimeId())));
+            CreatorToolApi.remove(source.getPlayerOrThrow(), CreatorTools.identifier("region_"+region.runtimeId()));
         }
 
         source.sendFeedback(() -> withMapPrefix(map, Text.translatable("text.nucleoid_creator_tools.map.region.remove.success", regions.size())), false);
