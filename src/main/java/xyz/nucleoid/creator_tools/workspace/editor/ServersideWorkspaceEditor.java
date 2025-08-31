@@ -17,7 +17,7 @@ import com.google.common.base.Predicates;
 import xyz.nucleoid.creator_tools.CreatorTools;
 import xyz.nucleoid.creator_tools.workspace.MapWorkspace;
 import xyz.nucleoid.creator_tools.workspace.WorkspaceRegion;
-import xyz.nucleoid.creator_tools.workspace.trace.PartialRegion;
+import xyz.nucleoid.creator_tools.workspace.trace.Region;
 import xyz.nucleoid.creator_tools.workspace.trace.RegionTraceMode;
 import xyz.nucleoid.map_templates.BlockBounds;
 import net.minecraft.screen.ScreenTexts;
@@ -33,7 +33,7 @@ public final class ServersideWorkspaceEditor implements WorkspaceEditor {
     private final MapWorkspace workspace;
 
     private RegionTraceMode traceMode = RegionTraceMode.EXACT;
-    private PartialRegion tracing;
+    private Region tracing;
     private BlockBounds traced;
 
     private Predicate<String> filter = NO_FILTER;
@@ -96,10 +96,6 @@ public final class ServersideWorkspaceEditor implements WorkspaceEditor {
         return true;
     }
 
-    private boolean isRegionVisible(WorkspaceRegion region) {
-        return this.filter.test(region.marker());
-    }
-
     @Override
     @Nullable
     public BlockBounds takeTracedRegion() {
@@ -118,7 +114,7 @@ public final class ServersideWorkspaceEditor implements WorkspaceEditor {
                 this.tracing = null;
                 this.player.sendMessage(Text.translatable("item.nucleoid_creator_tools.add_region.trace_mode.commit"), true);
             } else {
-                this.tracing = new PartialRegion(pos);
+                this.tracing = new Region(pos);
             }
         }
     }
@@ -176,8 +172,6 @@ public final class ServersideWorkspaceEditor implements WorkspaceEditor {
         ParticleOutlineRenderer.render(CreatorTools.identifier("workspace_bounds"),this.player, bounds.min(), bounds.max(), 1.0F, 0.0F, 0.0F);
 
         for (var region : workspace.getRegions()) {
-            if (!this.isRegionVisible(region)) continue;
-
             var regionBounds = region.bounds();
             var min = regionBounds.min();
             var max = regionBounds.max();
@@ -227,13 +221,9 @@ public final class ServersideWorkspaceEditor implements WorkspaceEditor {
     }
 
     public static Text textForRegion(WorkspaceRegion region, boolean showDetails) {
-        MutableText text = Text.empty()
-                .append(Text.literal(region.marker()).formatted(Formatting.BOLD));
-
+        MutableText text = Text.empty().append(Text.literal(region.marker()).formatted(Formatting.BOLD));
         if (!region.data().isEmpty() && showDetails) {
-            text
-                    .append(ScreenTexts.LINE_BREAK)
-                    .append(new NbtTextFormatter("  ").apply(region.data()));
+            text.append(ScreenTexts.LINE_BREAK).append(new NbtTextFormatter("  ").apply(region.data()));
         }
 
         return text;

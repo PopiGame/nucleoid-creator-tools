@@ -3,11 +3,11 @@ package xyz.nucleoid.creator_tools.workspace.trace;
 import net.minecraft.util.math.BlockPos;
 import xyz.nucleoid.map_templates.BlockBounds;
 
-public class PartialRegion {
+public class Region {
     private final BlockPos origin;
     private BlockPos target;
 
-    public PartialRegion(BlockPos origin) {
+    public Region(BlockPos origin) {
         this.origin = origin;
     }
 
