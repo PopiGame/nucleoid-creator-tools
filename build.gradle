@@ -19,7 +19,7 @@ repositories {
   maven { url = "https://maven.nucleoid.xyz/" }
   maven { url = "https://maven.gegy.dev/" }
   maven { url 'https://oss.sonatype.org/content/repositories/snapshots' }
-
+  maven { url = uri("https://jitpack.io") }
 }
 
 dependencies {
@@ -34,8 +34,7 @@ dependencies {
   modImplementation include('xyz.nucleoid:server-translations-api:2.5.1+1.21.5')
   modImplementation include('xyz.nucleoid:fantasy:0.6.7+1.21.5')
   modImplementation(include('me.lucko:fabric-permissions-api:0.4.0'))
-
-  modImplementation include('xyz.nucleoid:map-templates:0.2.2+1.21.6')
+  modImplementation(include("com.github.PopiGame:map-templates:debf012e54"))
 }
 
 processResources {
