@@ -22,7 +22,7 @@ public final class AddRegionItem extends Item {
         }
 
         if (player instanceof ServerPlayerEntity serverPlayer) {
-            var workspaceManager = MapWorkspaceManager.get(Objects.requireNonNull(serverPlayer.getServer()));
+            var workspaceManager = MapWorkspaceManager.get(Objects.requireNonNull(world.getServer()));
             var editor = workspaceManager.getEditorFor(serverPlayer);
 
             if (editor != null && editor.useRegionItem()) {

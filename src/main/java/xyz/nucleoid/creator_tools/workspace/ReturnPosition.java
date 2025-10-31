@@ -7,6 +7,7 @@ import com.mojang.serialization.codecs.RecordCodecBuilder;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.registry.RegistryKey;
 import net.minecraft.registry.RegistryKeys;
+import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.util.math.Vec3d;
@@ -32,16 +33,16 @@ public record ReturnPosition(RegistryKey<World> dimension, Vec3d position, float
     }
 
     public static ReturnPosition capture(PlayerEntity player) {
-        return new ReturnPosition(player.getWorld().getRegistryKey(), player.getPos(), player.getYaw(), player.getPitch());
+        return new ReturnPosition(player.getEntityWorld().getRegistryKey(), player.getEntityPos(), player.getYaw(), player.getPitch());
     }
 
     public static ReturnPosition ofSpawn(ServerWorld world) {
-        var spawnPos = world.getSpawnPos();
-        return new ReturnPosition(world.getRegistryKey(), Vec3d.ofBottomCenter(spawnPos), 0.0F, 0.0F);
+        var spawnPos = world.getSpawnPoint();
+        return new ReturnPosition(world.getRegistryKey(), Vec3d.ofBottomCenter(spawnPos.getPos()), spawnPos.yaw(), spawnPos.pitch());
     }
 
     public void applyTo(ServerPlayerEntity player) {
-        var world = player.getServer().getWorld(this.dimension);
+        var world = player.getEntityWorld().getServer().getWorld(this.dimension);
         player.teleportTo(new TeleportTarget(world, this.position, Vec3d.ZERO, this.yaw, this.pitch, TeleportTarget.NO_OP));
     }
 }

@@ -1,8 +1,7 @@
 plugins {
-  id 'fabric-loom' version '1.10.+'
+  id 'fabric-loom' version '1.11-SNAPSHOT'
   id 'maven-publish'
   id "com.modrinth.minotaur" version "2.+"
-
 }
 
 sourceCompatibility = targetCompatibility = JavaVersion.VERSION_21
@@ -26,15 +25,17 @@ dependencies {
   minecraft "com.mojang:minecraft:${project.minecraft_version}"
   mappings "net.fabricmc:yarn:${project.yarn_mappings}:v2"
   modImplementation "net.fabricmc:fabric-loader:${project.loader_version}"
-
+  modRuntimeOnly("xyz.nucleoid:plasmid:0.6.7-SNAPSHOT+1.21.10") {
+    exclude group: 'xyz.nucleoid', module: 'map-templates'
+  }
   modImplementation "net.fabricmc.fabric-api:fabric-api:${project.fabric_version}"
   modImplementation(fileTree("libs"))
-  modImplementation include('eu.pb4:polymer-core:0.13.2+1.21.6')
-  modImplementation include('eu.pb4:polymer-virtual-entity:0.13.2+1.21.6')
-  modImplementation include('xyz.nucleoid:server-translations-api:2.5.1+1.21.5')
-  modImplementation include('xyz.nucleoid:fantasy:0.6.7+1.21.5')
-  modImplementation(include('me.lucko:fabric-permissions-api:0.4.0'))
-  modImplementation(include("com.github.PopiGame:map-templates:debf012e54"))
+  modImplementation include('eu.pb4:polymer-core:0.14.3+1.21.10')
+  modImplementation include('eu.pb4:polymer-virtual-entity:0.14.3+1.21.10')
+  modImplementation include('xyz.nucleoid:fantasy:0.6.8+1.21.9'){
+    exclude group: 'xyz.nucleoid', module: 'map-templates'
+  }
+  modImplementation(include('me.lucko:fabric-permissions-api:0.5.0'))
 }
 
 processResources {

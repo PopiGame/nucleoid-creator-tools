@@ -13,7 +13,7 @@
   "mixins": ["creator_tools.mixins.json"],
   "accessWidener": "creator_tools.accesswidener",
   "depends": {
-    "fabricloader": ">=0.9.1",
+    "fabricloader": "*",
     "fabric": "*",
     "minecraft": ">=1.21.5-",
     "java": ">=21"

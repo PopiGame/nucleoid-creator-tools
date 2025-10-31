@@ -3,6 +3,7 @@ package xyz.nucleoid.creator_tools;
 import net.minecraft.registry.RegistryWrapper;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.Util;
+import net.minecraft.world.dimension.DimensionOptions;
 import xyz.nucleoid.map_templates.MapTemplate;
 import xyz.nucleoid.map_templates.MapTemplateSerializer;
 
@@ -30,13 +31,13 @@ public final class MapTemplateExporter {
         }
     }
 
-    public static CompletableFuture<Void> saveToExport(MapTemplate template, Identifier identifier, RegistryWrapper.WrapperLookup registries) {
+    public static CompletableFuture<Void> saveToExport(MapTemplate template, Identifier identifier, RegistryWrapper.WrapperLookup registries, boolean isOverworld) {
         return CompletableFuture.supplyAsync(() -> {
             var path = getExportPathFor(identifier);
             try {
                 Files.createDirectories(path.getParent());
                 try (var output = Files.newOutputStream(path)) {
-                    MapTemplateSerializer.saveTo(template, output, registries);
+                    MapTemplateSerializer.saveTo(template, output, registries, isOverworld);
                     return null;
                 }
             } catch (IOException e) {

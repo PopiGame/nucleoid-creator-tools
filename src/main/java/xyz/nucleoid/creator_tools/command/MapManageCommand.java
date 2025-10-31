@@ -100,12 +100,19 @@ public final class MapManageCommand {
                 ))
                 .then(literal("leave").executes(MapManageCommand::leaveMap))
                 .then(literal("export")
-                    .then(MapWorkspaceArgument.argument("workspace")
-                    .executes(context -> MapManageCommand.exportMap(context, false))
-                    .then(literal("withEntities")
-                        .executes(context -> MapManageCommand.exportMap(context, true))
-                    )
-                ))
+                        .then(MapWorkspaceArgument.argument("workspace")
+                                .executes(context -> MapManageCommand.exportMap(context, false, false))
+                                .then(literal("withEntities")
+                                        .executes(context -> MapManageCommand.exportMap(context, true, false))
+                                        .then(literal("isOverworld")
+                                                .executes(context -> MapManageCommand.exportMap(context, true, true))
+                                        )
+                                )
+                                .then(literal("isOverworld")
+                                        .executes(context -> MapManageCommand.exportMap(context, false, true))
+                                )
+                        )
+                )
                 .then(literal("delete")
                     .then(MapWorkspaceArgument.argument("workspace_once")
                     .then(MapWorkspaceArgument.argument("workspace_again")
@@ -268,7 +275,7 @@ public final class MapManageCommand {
         var player = source.getPlayerOrThrow();
 
         var workspaceManager = MapWorkspaceManager.get(source.getServer());
-        var workspace = workspaceManager.byDimension(player.getWorld().getRegistryKey());
+        var workspace = workspaceManager.byDimension(player.getEntityWorld().getRegistryKey());
 
         if (workspace == null) {
             throw MAP_NOT_HERE.create();
@@ -292,9 +299,8 @@ public final class MapManageCommand {
         return Command.SINGLE_SUCCESS;
     }
 
-    private static int exportMap(CommandContext<ServerCommandSource> context, boolean includeEntities) throws CommandSyntaxException {
+    private static int exportMap(CommandContext<ServerCommandSource> context, boolean includeEntities, boolean isOverworld) throws CommandSyntaxException {
         var source = context.getSource();
-
         var workspace = MapWorkspaceArgument.get(context, "workspace");
 
         var template = workspace.compile(includeEntities);
@@ -311,7 +317,7 @@ public final class MapManageCommand {
         }
 
         var registries = source.getRegistryManager();
-        var future = MapTemplateExporter.saveToExport(template, workspace.getIdentifier(), registries);
+        var future = MapTemplateExporter.saveToExport(template, workspace.getIdentifier(), registries, isOverworld);
 
         future.handle((v, throwable) -> {
             if (throwable == null) {
