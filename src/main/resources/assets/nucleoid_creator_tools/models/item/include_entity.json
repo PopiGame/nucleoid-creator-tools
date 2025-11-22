@@ -1,6 +1,7 @@
 {
   "format_version": "1.21.6",
   "credit": "MilesGlitch",
+  "parent": "item/generated",
   "textures": {
     "layer0": "nucleoid_creator_tools:item/include_entity"
   },
@@ -11,11 +12,11 @@
       "rotation": {"angle": 0, "axis": "y", "origin": [0, 0, 9]},
       "faces": {
         "north": {"uv": [0, 0, 16, 16], "texture": "#layer0"},
-        "east": {"uv": [0, 0, 0, 16], "texture": "#missing"},
+        "east": {"uv": [0, 0, 0, 16], "texture": "#layer0"},
         "south": {"uv": [0, 0, 16, 16], "texture": "#layer0"},
-        "west": {"uv": [0, 0, 0, 16], "texture": "#missing"},
-        "up": {"uv": [0, 0, 16, 0], "texture": "#missing"},
-        "down": {"uv": [0, 0, 16, 0], "texture": "#missing"}
+        "west": {"uv": [0, 0, 0, 16], "texture": "#layer0"},
+        "up": {"uv": [0, 0, 16, 0], "texture": "#layer0"},
+        "down": {"uv": [0, 0, 16, 0], "texture": "#layer0"}
       }
     }
   ],
